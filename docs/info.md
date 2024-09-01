@@ -9,11 +9,17 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+The Basys 3 is a normal board for learning FPGA design or prototyping certain designs. This project runs the main peripherals over a 115200 UART link. This code includes the main block that takes 16 "Led" inputs, 16 "Switch" Outputs, 12 "7 Segment Display" inputs, and 5 "Button" outputs; the block then gives a UART RX and UART TX which are routed to the bi-directional PMOD bus. 
 
 ## How to test
 
-Explain how to use your project
+Use the associated PMOD board or interact with the UART. The following are the expected elements on the UART. 
+
+- "LED: 0xFFFF" Coming from this design going to the peripheral
+- "SW: 0xFFFF" Coming from the peripheral going to the design
+- "7S: 0xFFF" Coming from this design going to the peripheral
+- "BUT: 0xFF" Coming from the peripheral going to the design
+
 
 ## External hardware
 
