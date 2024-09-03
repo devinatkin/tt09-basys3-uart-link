@@ -1,0 +1,28 @@
+{
+    "name": "Verilog HDL (Icarus Verilog)",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "forwardPorts": [6080],
+    "portsAttributes": {
+      "6080": {
+        "label": "desktop"
+      }
+    },
+    "remoteUser": "codespace",
+    "containerUser": "codespace",
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "username": "codespace",
+            "userUid": "1000",
+            "userGid": "1000"
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/desktop-lite:1": {},
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    },
+    "postCreateCommand": "git config --global --add safe.directory /OpenLane && cd /OpenLane/ && make && make test"
+}
