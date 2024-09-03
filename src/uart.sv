@@ -1,10 +1,8 @@
 // Based on Module by : Yuya Kudo
 
-`include "uart_if.sv"
-
 module uart #(parameter
-    DATA_WIDTH = 8
-    BAUD_RATE = 115_200
+    DATA_WIDTH = 8,
+    BAUD_RATE = 115_200,
     CLK_FREQ = 50_000_000)
 (
     input logic clk,
