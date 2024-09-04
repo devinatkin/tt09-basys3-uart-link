@@ -33,14 +33,17 @@ module tt_um_devinatkin_basys3_uart (
 
     logic [(DATA_WIDTH * CHARACTER_COUNT)-1:0] sr_data ;
 
+    logic [DATA_WIDTH-1:0] tx_data_in;
+    logic tx_data_in_valid;
+
     // Assign the direction of the IOs
-    assign uio_oe  = 8'b00011001; 
+    assign uio_oe  = 8'b00011101; 
 
     // All output pins must be assigned. If not used, assign to 0.
     assign uo_out  = ui_in;  // Example: ou_out is the sum of ui_in and uio_in
     assign uio_out[0] = tx_signal;
     assign uio_out[1] = 1'b0; // rx_signal
-    assign uio_out[2] = 1'b0; // tx_valid 
+    assign uio_out[2] = tx_valid;
     assign uio_out[3] = tx_ready;
     assign uio_out[4] = rx_valid;
     assign uio_out[5] = 1'b0; // rx_ready
@@ -49,14 +52,15 @@ module tt_um_devinatkin_basys3_uart (
 
     // uio_in[0] tx_signal - output
     assign rx_signal = uio_in[1];
-    assign tx_valid = uio_in[2];
+    // assign tx_valid = uio_in[2];
     // uio_in[3] tx_ready - output
     // uio_in[4] rx_valid - output
     assign rx_ready = uio_in[5];
     // uio_in[6] unused
     // uio_in[7] unused
 
-    assign tx_data = rx_data;
+    assign tx_data_in_valid = 1'b1;
+    assign tx_data_in = 8'b11001100;
 
      
 
@@ -86,6 +90,20 @@ module tt_um_devinatkin_basys3_uart (
     .rx_data(rx_data),
     .rx_valid(rx_valid),
     .sr_data(sr_data),
+    .clk(clk),
+    .reset_n(rst_n),
+    .ena(ena));
+
+    uart_tx_fifo #(
+    .DATA_WIDTH(DATA_WIDTH),
+    .CHARACTER_COUNT(CHARACTER_COUNT)
+    ) uart_tx_fifo_inst
+    (
+    .tx_data(tx_data),
+    .tx_valid(tx_valid),
+    .tx_ready(tx_ready),
+    .tx_data_in(tx_data_in),
+    .tx_data_in_valid(tx_data_in_valid),
     .clk(clk),
     .reset_n(rst_n),
     .ena(ena));
