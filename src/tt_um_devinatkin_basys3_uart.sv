@@ -87,7 +87,7 @@ module tt_um_devinatkin_basys3_uart (
     .rx_valid(rx_valid),
     .sr_data(sr_data),
     .clk(clk),
-    .reset_n(reset_n),
+    .reset_n(rst_n),
     .ena(ena));
 
 endmodule
