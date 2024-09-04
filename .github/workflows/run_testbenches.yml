@@ -23,10 +23,6 @@ jobs:
       run: |
         sudo apt-get install -y iverilog
 
-    - name: Install Pip Requirements
-      run: |
-        pip install -r requirements.txt
-
     - name: Run testbenches
       run: |
         cd tb
