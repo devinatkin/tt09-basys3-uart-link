@@ -76,4 +76,16 @@ module tt_um_devinatkin_basys3_uart (
       .rx_ready(rx_ready)
   );
 
+    uart_sr_input #(
+    .DATA_WIDTH(DATA_WIDTH),
+    .CHARACTER_COUNT(CHARACTER_COUNT)
+    ) uart_input_shift_register
+    (
+    .rx_data(rx_data),
+    .rx_valid(rx_valid),
+    .sr_data(sr_data),
+    .clk(clk),
+    .reset_n(reset_n),
+    .ena(ena));
+
 endmodule

@@ -1,11 +1,13 @@
 `timescale 1ns / 1ps
 
-module tb_uart;
+module tb_uart_sr;
 
     // Parameters
     parameter DATA_WIDTH = 8;
     parameter BAUD_RATE = 115_200;
     parameter CLK_FREQ = 50_000_000;
+
+    parameter CHARACTER_COUNT = 10;
 
     // Clock and Reset
     logic clk;
@@ -23,6 +25,9 @@ module tb_uart;
     logic [DATA_WIDTH-1:0] rx_data;
     logic rx_valid;
     logic rx_ready;
+
+    logic [(DATA_WIDTH * CHARACTER_COUNT)-1:0] sr_data ;
+
 
     // Watchdog counter
     int watchdog_counter;
@@ -46,6 +51,18 @@ module tb_uart;
         .rx_ready(rx_ready)
     );
 
+    uart_sr_input #(
+    .DATA_WIDTH(DATA_WIDTH),
+    .CHARACTER_COUNT(CHARACTER_COUNT)
+    ) uart_sr_input_inst
+    (
+    .rx_data(rx_data),
+    .rx_valid(rx_valid),
+    .sr_data(sr_data),
+    .clk(clk),
+    .reset_n(reset_n),
+    .ena(ena));
+
     // Clock generation
     always #10 clk = ~clk;
 
@@ -64,10 +81,11 @@ module tb_uart;
         end
     end
 
+
     // Testbench logic
     initial begin
-        // $dumpfile("output.vcd"); // Specify the VCD file name
-        // $dumpvars(0, tb_uart); // Replace <testbench_module> with the top module of your testbench
+        $dumpfile("output.vcd"); // Specify the VCD file name
+        $dumpvars(0, tb_uart_sr); // Replace <testbench_module> with the top module of your testbench
 
         // Initialize
         clk = 0;
@@ -83,7 +101,6 @@ module tb_uart;
         for (int i = 0; i < (1 << DATA_WIDTH); i++) begin
             // Send data
             $display("Sending %0d",i);
-
             tx_data = i;
             tx_valid = 1;        
             rx_ready = 0;
@@ -105,6 +122,16 @@ module tb_uart;
                 $finish;
             end else begin
                 $display("SUCCESS: Data matched at %0t: sent %0h, received %0h", $time, tx_data, rx_data);
+                wait(rx_valid == 0); // Wait for the data to be shifted into the shift register
+                if (sr_data[DATA_WIDTH-1:0] !== tx_data) begin
+                    $display("ERROR: Data mismatch in shift register at %0t: sent %0h, received %0h", $time, tx_data, sr_data[DATA_WIDTH-1:0]);
+                    $finish;
+                end else begin
+                    $display("Shift Register[0]: %0h", sr_data[DATA_WIDTH-1:0]);
+                end
+
+                
+
             end
 
             // Wait for the next transmission
