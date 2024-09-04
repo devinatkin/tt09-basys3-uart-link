@@ -21,6 +21,7 @@ project:
     - "uart_rx.sv"
     - "uart_tx.sv"
     - "uart.sv"
+    - "uart_sr_input.sv"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
