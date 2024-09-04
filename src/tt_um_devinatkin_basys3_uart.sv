@@ -23,6 +23,14 @@ module tt_um_devinatkin_basys3_uart (
   logic tx_signal;
   logic rx_signal;
 
+  logic [DATA_WIDTH-1:0] tx_data;
+  logic tx_valid;
+  logic tx_ready;
+
+  logic [DATA_WIDTH-1:0] rx_data;
+  logic rx_valid;
+  logic rx_ready;
+
   // All output pins must be assigned. If not used, assign to 0.
   assign uo_out  = ui_in;  // Example: ou_out is the sum of ui_in and uio_in
   assign uio_out[0] = tx_signal;
