@@ -11,7 +11,7 @@ OUT_DIR = sim_out
 $(shell mkdir -p $(OUT_DIR))
 
 # All source files (excluding testbenches)
-SOURCES = ../src/tt_um_devinatkin_basys3_uart.sv ../src/uart.sv ../src/uart_tx.sv ../src/uart_rx.sv ../src/uart_if.sv
+SOURCES = ../src/tt_um_devinatkin_basys3_uart.sv ../src/uart.sv ../src/uart_tx.sv ../src/uart_rx.sv 
 
 # Phony targets
 .PHONY: all clean

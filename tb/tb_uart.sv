@@ -13,15 +13,19 @@ module tb_uart;
 
     // UART signals
     logic ena;
-    logic [DATA_WIDTH-1:0] tx_data;
-    logic [DATA_WIDTH-1:0] rx_data;
-    logic tx_ready;
-    logic rx_ready;
-    logic tx, rx;
 
-    // UART Interface instances
-    uart_if.rx rxif();
-    uart_if.tx txif();
+    // UART Interface
+    logic rx_tx_signal;
+    logic [DATA_WIDTH-1:0] tx_data;
+    logic tx_valid;
+    logic tx_ready;
+
+    logic [DATA_WIDTH-1:0] rx_data;
+    logic rx_valid;
+    logic rx_ready;
+
+    // Watchdog counter
+    int watchdog_counter;
 
     // UART instance
     uart #(
@@ -32,17 +36,33 @@ module tb_uart;
         .clk(clk),
         .reset_n(reset_n),
         .ena(ena),
-        .rxif(rxif),
-        .txif(txif),
-        .rx(rx),
-        .tx(tx)
+        .tx_signal(rx_tx_signal),
+        .tx_data(tx_data),
+        .tx_valid(tx_valid),
+        .tx_ready(tx_ready),
+        .rx_signal(rx_tx_signal),
+        .rx_data(rx_data),
+        .rx_valid(rx_valid),
+        .rx_ready(rx_ready)
     );
 
     // Clock generation
     always #10 clk = ~clk;
 
-    // Assign rx to tx to form a loopback
-    assign rx = tx;
+    // Watchdog logic
+    always @(posedge clk or negedge reset_n) begin
+        if (!reset_n) begin
+            watchdog_counter <= 0;
+        end else if (tx_ready || rx_valid) begin
+            watchdog_counter <= 0;  // Reset the counter when output changes
+        end else begin
+            watchdog_counter <= watchdog_counter + 1;
+            if (watchdog_counter >= 100) begin
+                $display("ERROR: Watchdog triggered at %0t: No output change for 100 clock cycles", $time);
+                $stop;
+            end
+        end
+    end
 
     // Testbench logic
     initial begin
@@ -59,19 +79,21 @@ module tb_uart;
         // Transmit and receive all possible values
         for (int i = 0; i < (1 << DATA_WIDTH); i++) begin
             // Send data
+            $display("Sending %0d",i);
+
             tx_data = i;
-            txif.data = tx_data;
-            txif.valid = 1;
-            #100;
-            txif.valid = 0;
+            tx_valid = 1;        
 
             // Wait for transmission to complete
-            wait(txif.ready == 0);
-            wait(txif.ready == 1);
+            wait(tx_ready == 0);
+
+            $display("Transmitting %0h", tx_data);
+            tx_valid = 0;
 
             // Wait for reception to complete
-            wait(rxif.valid == 1);
-            rx_data = rxif.data;
+            wait(rx_valid == 1);
+
+            $display("Receiving %0h", rx_data);
 
             // Check received data
             if (rx_data !== tx_data) begin
