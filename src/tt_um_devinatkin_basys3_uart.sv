@@ -31,6 +31,8 @@ module tt_um_devinatkin_basys3_uart (
     logic rx_valid;
     logic rx_ready;
 
+    logic [(DATA_WIDTH * CHARACTER_COUNT)-1:0] sr_data ;
+
     // Assign the direction of the IOs
     assign uio_oe  = 8'b00011001; 
 
