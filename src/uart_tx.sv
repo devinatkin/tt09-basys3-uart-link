@@ -8,7 +8,6 @@ module uart_tx #(parameter
     localparam
     LB_DATA_WIDTH    = $clog2(DATA_WIDTH),
     PULSE_WIDTH      = CLK_FREQ / BAUD_RATE,
-    LB_PULSE_WIDTH   = $clog2(PULSE_WIDTH),
     HALF_PULSE_WIDTH = PULSE_WIDTH / 2)
     (
     output logic tx_signal,
@@ -58,7 +57,7 @@ module uart_tx #(parameter
                         DATA_REG <= tx_data;    // Load the data to be transmitted into the DATA_REG
                         READY_REG <= 0;         // Clear the ready signal to indicate that we are busy
                         DATA_CNT <= 0;          // Clear the data counter
-                        CLK_CNT <= PULSE_WIDTH; // Load the clock counter with the pulse width
+                        CLK_CNT <= PULSE_WIDTH[LB_DATA_WIDTH:0]; // Load the clock counter with the pulse width
                     end
                 end
 
@@ -71,7 +70,7 @@ module uart_tx #(parameter
                     end
                     else begin
                         SIGNAL_REG <= DATA_REG[DATA_CNT];   // Set the signal to the current bit of the data
-                        CLK_CNT <= PULSE_WIDTH;             // Load the clock counter with the pulse width (so that the signal is held for the pulse width)
+                        CLK_CNT <= PULSE_WIDTH[LB_DATA_WIDTH:0];             // Load the clock counter with the pulse width (so that the signal is held for the pulse width)
 
                         if(DATA_CNT == DATA_WIDTH - 1) begin
                             state <= STT_STOP;              // If all the data is transmitted, go to the STT_STOP state
@@ -91,7 +90,7 @@ module uart_tx #(parameter
                     end
                     else begin
                         SIGNAL_REG <= 1;                           // Assert the stop bit
-                        CLK_CNT <= PULSE_WIDTH + HALF_PULSE_WIDTH; // Load the clock counter with the pulse width
+                        CLK_CNT <= PULSE_WIDTH[LB_DATA_WIDTH:0] + HALF_PULSE_WIDTH[LB_DATA_WIDTH:0]; // Load the clock counter with the pulse width
                         state <= STT_WAIT;                         // Go to the STT_WAIT state
                     end
                 end

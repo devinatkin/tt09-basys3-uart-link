@@ -37,6 +37,9 @@ module tt_um_devinatkin_basys3_uart (
   assign uio_out[7:1] = 7'b0;
 
   assign rx_signal = uio_in[1];
+  assign tx_valid = uio_in[2];
+
+  assign tx_data = rx_data;
 
   assign uio_oe  = 8'b00000001;    
 

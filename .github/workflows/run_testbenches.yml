@@ -31,4 +31,5 @@ jobs:
 
     - name: Cleanup
       run: |
+        cd tb
         make clean

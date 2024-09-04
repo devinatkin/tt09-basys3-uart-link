@@ -107,9 +107,9 @@ module uart_rx #(parameter
                     end
                     else begin
                         DATA_TEMP_REG <= {SIGNAL_R, DATA_TEMP_REG[DATA_WIDTH-1:1]};
-                        CLK_CNT <= PULSE_WIDTH;
+                        CLK_CNT <= PULSE_WIDTH[LB_PULSE_WIDTH:0];
 
-                        if (DATA_CNT == DATA_WIDTH - 1) begin
+                        if (DATA_CNT == DATA_WIDTH[LB_DATA_WIDTH:0] - 1) begin
                             state <= STT_STOP;
                         end
                         else begin
