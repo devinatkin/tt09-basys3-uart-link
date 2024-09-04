@@ -19,7 +19,7 @@ module tt_um_devinatkin_basys3_uart (
     parameter DATA_WIDTH = 8;
     parameter BAUD_RATE = 115_200;
     parameter CLK_FREQ = 50_000_000;
-
+    parameter CHARACTER_COUNT = 10;
     logic tx_signal;
     logic rx_signal;
 
