@@ -16,32 +16,47 @@ module tt_um_devinatkin_basys3_uart (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-  parameter DATA_WIDTH = 8;
-  parameter BAUD_RATE = 115_200;
-  parameter CLK_FREQ = 50_000_000;
+    parameter DATA_WIDTH = 8;
+    parameter BAUD_RATE = 115_200;
+    parameter CLK_FREQ = 50_000_000;
 
-  logic tx_signal;
-  logic rx_signal;
+    logic tx_signal;
+    logic rx_signal;
 
-  logic [DATA_WIDTH-1:0] tx_data;
-  logic tx_valid;
-  logic tx_ready;
+    logic [DATA_WIDTH-1:0] tx_data;
+    logic tx_valid;
+    logic tx_ready;
 
-  logic [DATA_WIDTH-1:0] rx_data;
-  logic rx_valid;
-  logic rx_ready;
+    logic [DATA_WIDTH-1:0] rx_data;
+    logic rx_valid;
+    logic rx_ready;
 
-  // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in;  // Example: ou_out is the sum of ui_in and uio_in
-  assign uio_out[0] = tx_signal;
-  assign uio_out[7:1] = 7'b0;
+    // Assign the direction of the IOs
+    assign uio_oe  = 8'b00011001; 
 
-  assign rx_signal = uio_in[1];
-  assign tx_valid = uio_in[2];
+    // All output pins must be assigned. If not used, assign to 0.
+    assign uo_out  = ui_in;  // Example: ou_out is the sum of ui_in and uio_in
+    assign uio_out[0] = tx_signal;
+    assign uio_out[1] = 1'b0; // rx_signal
+    assign uio_out[2] = 1'b0; // tx_valid 
+    assign uio_out[3] = tx_ready;
+    assign uio_out[4] = rx_valid;
+    assign uio_out[5] = 1'b0; // rx_ready
+    assign uio_out[6] = 1'b0; // unused
+    assign uio_out[7] = 1'b0; // unused
 
-  assign tx_data = rx_data;
+    // uio_in[0] tx_signal - output
+    assign rx_signal = uio_in[1];
+    assign tx_valid = uio_in[2];
+    // uio_in[3] tx_ready - output
+    // uio_in[4] rx_valid - output
+    assign rx_ready = uio_in[5];
+    // uio_in[6] unused
+    // uio_in[7] unused
 
-  assign uio_oe  = 8'b00000001;    
+    assign tx_data = rx_data;
+
+     
 
   uart #(
       .DATA_WIDTH(DATA_WIDTH),
@@ -60,8 +75,5 @@ module tt_um_devinatkin_basys3_uart (
       .rx_valid(rx_valid),
       .rx_ready(rx_ready)
   );
-
-  // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, 1'b0};
 
 endmodule
