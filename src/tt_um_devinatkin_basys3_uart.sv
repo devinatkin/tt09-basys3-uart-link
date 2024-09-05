@@ -37,8 +37,6 @@ module tt_um_devinatkin_basys3_uart (
     logic [ELEMENT_COUNT-1:0] element_data;
 
     assign uo_out = switch_data[7:0];
-    assign led_data[7:0] = switch_data[7:0];
-    assign led_data[15:8] = switch_data[7:0];
     assign element_data[11] = switch_data[7];
     // Assign IO directions
     assign uio_oe = 8'b00011101; // Define IO directions (1 = output)
@@ -119,7 +117,7 @@ module tt_um_devinatkin_basys3_uart (
     .CHARACTER_COUNT(CHARACTER_COUNT),
     .LED_COUNT(LED_COUNT),
     .ELEMENT_COUNT(ELEMENT_COUNT)
-  ) dut (
+    ) output_value_inst (
     .led_data(led_data),
     .element_data(element_data),
     .tx_ready(tx_ready),
@@ -140,5 +138,12 @@ display_driver SegmentDisplay (
     .seg(element_data[6:0]),      // Segment Outputs
     .an(element_data[10:7])        // Common Anode Outputs (0 = on, 1 = off)
 );
+
+    led_cycle Led_Cycle_inst (
+        .clk(clk),
+        .rst_n(rst_n),
+        .buttons(button_data),
+        .led(led_data)
+    );
 
 endmodule

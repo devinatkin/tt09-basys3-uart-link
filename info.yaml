@@ -30,6 +30,7 @@ project:
     - "pwm_module.sv"
     - "segment_mux.sv"
     - "sevenseg4ddriver.sv"
+    - "led_cycle.sv"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:

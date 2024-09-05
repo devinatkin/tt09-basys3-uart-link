@@ -25,7 +25,8 @@ SOURCES = \
 	../src/bcd_binary.sv \
 	../src/display_driver.sv \
 	../src/segment_mux.sv \
-	../src/sevenseg4ddriver.sv
+	../src/sevenseg4ddriver.sv \
+	../src/led_cycle.sv
 
 # Phony targets
 .PHONY: all clean

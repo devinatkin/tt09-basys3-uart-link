@@ -18,7 +18,8 @@ PROJECT_SOURCES = \
 	segment_mux.sv \
 	sevenseg4ddriver.sv \
 	bcd_binary.sv \
-	pwm_module.sv
+	pwm_module.sv \
+	led_cycle.sv
 
 ifneq ($(GATES),yes)
 
