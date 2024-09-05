@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Your Name
+ * Copyright (c) 2024 Devin Atkin
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -11,101 +11,102 @@ module tt_um_devinatkin_basys3_uart (
     input  wire [7:0] uio_in,   // IOs: Input path
     output wire [7:0] uio_out,  // IOs: Output path
     output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
-    input  wire       ena,      // always 1 when the design is powered, so you can ignore it
-    input  wire       clk,      // clock
-    input  wire       rst_n     // reset_n - low to reset
+    input  wire       ena,      // Always 1 when the design is powered
+    input  wire       clk,      // Clock
+    input  wire       rst_n     // Reset (active low)
 );
 
+    // Parameters
     parameter DATA_WIDTH = 8;
     parameter BAUD_RATE = 115_200;
     parameter CLK_FREQ = 50_000_000;
     parameter CHARACTER_COUNT = 10;
-    logic tx_signal;
-    logic rx_signal;
+    parameter SWITCH_COUNT = 16;
+    parameter BUTTON_COUNT = 5;
 
-    logic [DATA_WIDTH-1:0] tx_data;
-    logic tx_valid;
-    logic tx_ready;
+    // Internal signals
+    logic tx_signal, rx_signal;
+    logic [DATA_WIDTH-1:0] tx_data, rx_data, tx_data_in;
+    logic tx_valid, tx_ready, rx_valid, rx_ready, tx_data_in_valid;
+    logic [(DATA_WIDTH * CHARACTER_COUNT)-1:0] sr_data;
+    logic [SWITCH_COUNT-1:0] switch_data;
+    logic [BUTTON_COUNT-1:0] button_data;
 
-    logic [DATA_WIDTH-1:0] rx_data;
-    logic rx_valid;
-    logic rx_ready;
+    // Assign IO directions
+    assign uio_oe = 8'b00011101; // Define IO directions (1 = output)
 
-    logic [(DATA_WIDTH * CHARACTER_COUNT)-1:0] sr_data ;
+    // Outputs assignment
+    assign uo_out = ui_in;       // Example output, can be adjusted
+    assign uio_out = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, tx_ready, tx_valid, tx_signal};
 
-    logic [DATA_WIDTH-1:0] tx_data_in;
-    logic tx_data_in_valid;
-
-    // Assign the direction of the IOs
-    assign uio_oe  = 8'b00011101; 
-
-    // All output pins must be assigned. If not used, assign to 0.
-    assign uo_out  = ui_in;  // Example: ou_out is the sum of ui_in and uio_in
-    assign uio_out[0] = tx_signal;
-    assign uio_out[1] = 1'b0; // rx_signal
-    assign uio_out[2] = tx_valid;
-    assign uio_out[3] = tx_ready;
-    assign uio_out[4] = rx_valid;
-    assign uio_out[5] = 1'b0; // rx_ready
-    assign uio_out[6] = 1'b0; // unused
-    assign uio_out[7] = 1'b0; // unused
-
-    // uio_in[0] tx_signal - output
+    // Inputs assignment
     assign rx_signal = uio_in[1];
-    // assign tx_valid = uio_in[2];
-    // uio_in[3] tx_ready - output
-    // uio_in[4] rx_valid - output
-    assign rx_ready = uio_in[5];
-    // uio_in[6] unused
-    // uio_in[7] unused
+    assign rx_ready  = uio_in[5];
 
-    assign tx_data_in_valid = 1'b1;
-    assign tx_data_in = 8'b11001100;
+    // Static assignments for TX data
+    assign tx_data_in_valid = 1'b1; // Always valid
+    assign tx_data_in = 8'b11001100; // Static TX data, can be updated
 
-     
+    // UART instance
+    uart #(
+        .DATA_WIDTH(DATA_WIDTH),
+        .BAUD_RATE(BAUD_RATE),
+        .CLK_FREQ(CLK_FREQ)
+    ) uart_inst (
+        .clk(clk),
+        .reset_n(rst_n),
+        .ena(ena),
+        .tx_signal(tx_signal),
+        .tx_data(tx_data),
+        .tx_valid(tx_valid),
+        .tx_ready(tx_ready),
+        .rx_signal(rx_signal),
+        .rx_data(rx_data),
+        .rx_valid(rx_valid),
+        .rx_ready(rx_ready)
+    );
 
-  uart #(
-      .DATA_WIDTH(DATA_WIDTH),
-      .BAUD_RATE(BAUD_RATE),
-      .CLK_FREQ(CLK_FREQ)
-  ) uart_inst (
-      .clk(clk),
-      .reset_n(rst_n),
-      .ena(ena),
-      .tx_signal(tx_signal),
-      .tx_data(tx_data),
-      .tx_valid(tx_valid),
-      .tx_ready(tx_ready),
-      .rx_signal(rx_signal),
-      .rx_data(rx_data),
-      .rx_valid(rx_valid),
-      .rx_ready(rx_ready)
-  );
-
+    // UART Shift Register for input
     uart_sr_input #(
-    .DATA_WIDTH(DATA_WIDTH),
-    .CHARACTER_COUNT(CHARACTER_COUNT)
-    ) uart_input_shift_register
-    (
-    .rx_data(rx_data),
-    .rx_valid(rx_valid),
-    .sr_data(sr_data),
-    .clk(clk),
-    .reset_n(rst_n),
-    .ena(ena));
+        .DATA_WIDTH(DATA_WIDTH),
+        .CHARACTER_COUNT(CHARACTER_COUNT)
+    ) uart_input_shift_register (
+        .rx_data(rx_data),
+        .rx_valid(rx_valid),
+        .sr_data(sr_data),
+        .clk(clk),
+        .reset_n(rst_n),
+        .ena(ena)
+    );
 
+    // UART TX FIFO
     uart_tx_fifo #(
-    .DATA_WIDTH(DATA_WIDTH),
-    .CHARACTER_COUNT(CHARACTER_COUNT)
-    ) uart_tx_fifo_inst
-    (
-    .tx_data(tx_data),
-    .tx_valid(tx_valid),
-    .tx_ready(tx_ready),
-    .tx_data_in(tx_data_in),
-    .tx_data_in_valid(tx_data_in_valid),
-    .clk(clk),
-    .reset_n(rst_n),
-    .ena(ena));
+        .DATA_WIDTH(DATA_WIDTH),
+        .CHARACTER_COUNT(CHARACTER_COUNT)
+    ) uart_tx_fifo_inst (
+        .tx_data(tx_data),
+        .tx_valid(tx_valid),
+        .tx_ready(tx_ready),
+        .tx_data_in(tx_data_in),
+        .tx_data_in_valid(tx_data_in_valid),
+        .clk(clk),
+        .reset_n(rst_n),
+        .ena(ena)
+    );
+
+    // Input value checker
+    input_value_check #(
+        .DATA_WIDTH(DATA_WIDTH),
+        .CHARACTER_COUNT(CHARACTER_COUNT),
+        .SWITCH_COUNT(SWITCH_COUNT),
+        .BUTTON_COUNT(BUTTON_COUNT)
+    ) input_value_check_inst (
+        .switch_data(switch_data),
+        .button_data(button_data),
+        .sr_data(sr_data),
+        .clk(clk),
+        .reset_n(rst_n),
+        .ena(ena)
+    );
 
 endmodule

@@ -15,10 +15,10 @@ The Basys 3 is a normal board for learning FPGA design or prototyping certain de
 
 Use the associated PMOD board or interact with the UART. The following are the expected elements on the UART. 
 
-- "LED: 0xFFFF" Coming from this design going to the peripheral
+- "LD: 0xFFFF" Coming from this design going to the peripheral
 - "SW: 0xFFFF" Coming from the peripheral going to the design
-- "7S: 0xFFF" Coming from this design going to the peripheral
-- "BUT: 0xFF" Coming from the peripheral going to the design
+- "7S: 0xFFFF" Coming from this design going to the peripheral
+- "BT: 0xFFFF" Coming from the peripheral going to the design
 
 
 ## External hardware
