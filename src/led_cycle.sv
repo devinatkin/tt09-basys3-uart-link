@@ -2,7 +2,7 @@ module led_cycle (
     input clk,                  // 50MHz clock
     input rst_n,                // Reset signal
     input [4:0] buttons,        // 5 buttons for speed adjustment
-    output reg [15:0] led       // 16 LEDs
+    output logic [15:0] led       // 16 LEDs
 );
 
     localparam bit_width = 8;    // Set the bit width to 8 for PWM instances

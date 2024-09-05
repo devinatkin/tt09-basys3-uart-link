@@ -4,7 +4,7 @@ module circular_shift_register #(
 ) (
     input logic clk,            // Clock input
     input logic rst_n,          // Active low reset input
-    output logic [(WIDTH*SIZE)-1:0] reg_out // Output array of registers
+    output logic [WIDTH-1:0] reg_out [SIZE-1:0]  // Output array of registers
 );
 
     logic [WIDTH-1:0] circ_reg [SIZE-1:0]; // Register array definition
@@ -41,10 +41,10 @@ module circular_shift_register #(
         end
     end
 
-    // Always block to assign the values of the register array to the flattened output
+    // Assign the register values to reg_out
     always_comb begin
         for (int i = 0; i < SIZE; i++) begin
-            reg_out[(i*WIDTH)+:WIDTH] = circ_reg[i]; // Assign the register array to the output
+            reg_out[i] = circ_reg[i]; // Output the circular register values
         end
     end
     

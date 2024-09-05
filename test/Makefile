@@ -19,7 +19,8 @@ PROJECT_SOURCES = \
 	sevenseg4ddriver.sv \
 	bcd_binary.sv \
 	pwm_module.sv \
-	led_cycle.sv
+	led_cycle.sv \
+	circular_shift_register.sv
 
 ifneq ($(GATES),yes)
 
