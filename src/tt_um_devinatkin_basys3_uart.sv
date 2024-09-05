@@ -123,7 +123,7 @@ module tt_um_devinatkin_basys3_uart (
     .output_data(tx_data_in),
     .output_valid(tx_data_in_valid),
     .clk(clk),
-    .reset_n(reset_n),
+    .reset_n(rst_n),
     .ena(ena)
   );
 
