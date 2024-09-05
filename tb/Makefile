@@ -21,7 +21,11 @@ SOURCES = \
 	../src/input_value_check.sv \
 	../src/output_value_generator.sv \
 	../src/pwm_module.sv \
-	../src/circular_shift_register.sv
+	../src/circular_shift_register.sv \
+	../src/bcd_binary.sv \
+	../src/display_driver.sv \
+	../src/segment_mux.sv \
+	../src/sevenseg4ddriver.sv
 
 # Phony targets
 .PHONY: all clean
