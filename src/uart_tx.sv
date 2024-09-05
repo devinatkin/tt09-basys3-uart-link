@@ -73,7 +73,7 @@ module uart_tx #(parameter
                         SIGNAL_REG <= DATA_REG[DATA_CNT];   // Set the signal to the current bit of the data
                         CLK_CNT <= PULSE_WIDTH[LB_PULSE_WIDTH:0];             // Load the clock counter with the pulse width (so that the signal is held for the pulse width)
 
-                        if(DATA_CNT == DATA_WIDTH - 1) begin
+                        if(DATA_CNT == (DATA_WIDTH[LB_DATA_WIDTH-1:0] - 1)) begin
                             state <= STT_STOP;              // If all the data is transmitted, go to the STT_STOP state
                         end
                         else begin
@@ -91,7 +91,7 @@ module uart_tx #(parameter
                     end
                     else begin
                         SIGNAL_REG <= 1;                           // Assert the stop bit
-                        CLK_CNT <= PULSE_WIDTH[LB_DATA_WIDTH:0] + HALF_PULSE_WIDTH[LB_DATA_WIDTH:0]; // Load the clock counter with the pulse width
+                        CLK_CNT <= (PULSE_WIDTH + HALF_PULSE_WIDTH); // Load the clock counter with the pulse width
                         state <= STT_WAIT;                         // Go to the STT_WAIT state
                     end
                 end

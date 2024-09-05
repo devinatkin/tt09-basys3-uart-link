@@ -51,8 +51,8 @@ pinout:
   # Bidirectional pins
   uio[0]: "uart_tx"
   uio[1]: "uart_rx"
-  uio[2]: "uart_tx_valid"
-  uio[3]: "uart_tx_ready"
+  uio[2]: "uart_tx_ready"
+  uio[3]: "uart_tx_valid"
   uio[4]: "uart_rx_valid"
   uio[5]: "uart_rx_ready"
   uio[6]: ""

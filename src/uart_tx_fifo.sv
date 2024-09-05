@@ -26,29 +26,32 @@ module uart_tx_fifo #(parameter
     // DATA_WIDTH by CHARACTER_COUNT FiFo
     logic [DATA_WIDTH-1:0] fifo [CHARACTER_COUNT-1:0];
 
-    // fifo registers split out so they show up in gtkwave
-    logic [DATA_WIDTH-1:0] fifo_0;
-    logic [DATA_WIDTH-1:0] fifo_1;
-    logic [DATA_WIDTH-1:0] fifo_2;
-    logic [DATA_WIDTH-1:0] fifo_3;
-    logic [DATA_WIDTH-1:0] fifo_4;
-    logic [DATA_WIDTH-1:0] fifo_5;
-    logic [DATA_WIDTH-1:0] fifo_6;
-    logic [DATA_WIDTH-1:0] fifo_7;
-    logic [DATA_WIDTH-1:0] fifo_8;
-    logic [DATA_WIDTH-1:0] fifo_9;
+    // Declare a temporary variable to hold the result of highest1Bit
+    integer highest_idx;
 
-    // Assign the data to the registers
-    assign fifo_0 = fifo[0];
-    assign fifo_1 = fifo[1];
-    assign fifo_2 = fifo[2];
-    assign fifo_3 = fifo[3];
-    assign fifo_4 = fifo[4];
-    assign fifo_5 = fifo[5];
-    assign fifo_6 = fifo[6];
-    assign fifo_7 = fifo[7];
-    assign fifo_8 = fifo[8];
-    assign fifo_9 = fifo[9];
+    // // fifo registers split out so they show up in gtkwave
+    // logic [DATA_WIDTH-1:0] fifo_0;
+    // logic [DATA_WIDTH-1:0] fifo_1;
+    // logic [DATA_WIDTH-1:0] fifo_2;
+    // logic [DATA_WIDTH-1:0] fifo_3;
+    // logic [DATA_WIDTH-1:0] fifo_4;
+    // logic [DATA_WIDTH-1:0] fifo_5;
+    // logic [DATA_WIDTH-1:0] fifo_6;
+    // logic [DATA_WIDTH-1:0] fifo_7;
+    // logic [DATA_WIDTH-1:0] fifo_8;
+    // logic [DATA_WIDTH-1:0] fifo_9;
+
+    // // Assign the data to the registers
+    // assign fifo_0 = fifo[0];
+    // assign fifo_1 = fifo[1];
+    // assign fifo_2 = fifo[2];
+    // assign fifo_3 = fifo[3];
+    // assign fifo_4 = fifo[4];
+    // assign fifo_5 = fifo[5];
+    // assign fifo_6 = fifo[6];
+    // assign fifo_7 = fifo[7];
+    // assign fifo_8 = fifo[8];
+    // assign fifo_9 = fifo[9];
 
     logic [CHARACTER_COUNT-1:0] fifo_valid;
 
@@ -78,10 +81,11 @@ module uart_tx_fifo #(parameter
             // Output the data if the FIFO has any valid data
             if (fifo_valid > 0) begin
                 if(tx_ready) begin
-                    tx_data <= fifo[highest1Bit(fifo_valid)];
+                    highest_idx = highest1Bit(fifo_valid);
+                    tx_data <= fifo[highest_idx];
                     tx_valid <= 1;
-                    fifo[highest1Bit(fifo_valid)] <= 0;
-                    fifo_valid[highest1Bit(fifo_valid)] <= 0;
+                    fifo[highest_idx] <= 0;
+                    fifo_valid[highest_idx] <= 0;
                 end else begin
                     tx_valid <= 0;
                 end

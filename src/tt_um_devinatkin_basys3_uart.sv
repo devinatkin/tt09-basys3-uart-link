@@ -36,16 +36,20 @@ module tt_um_devinatkin_basys3_uart (
     logic [LED_COUNT-1:0] led_data;
     logic [ELEMENT_COUNT-1:0] element_data;
 
+    assign uo_out = switch_data[7:0];
+    assign led_data[7:0] = switch_data[7:0];
+    assign led_data[15:8] = switch_data[7:0];
+    assign element_data[7:0] = switch_data[7:0];
+    assign element_data[11:8] = switch_data[3:0];
     // Assign IO directions
     assign uio_oe = 8'b00011101; // Define IO directions (1 = output)
 
     // Outputs assignment
-    assign uo_out = ui_in;       // Example output, can be adjusted
-    assign uio_out = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, tx_ready, tx_valid, tx_signal};
+    assign uio_out = {1'b0, 1'b0, rx_valid, 1'b0, tx_valid, tx_ready, 1'b0, tx_signal};
 
     // Inputs assignment
     assign rx_signal = uio_in[1];
-    assign rx_ready  = uio_in[5];
+    assign rx_ready  = uio_in[4];
 
  
     // UART instance

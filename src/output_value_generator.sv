@@ -21,7 +21,6 @@ logic [DATA_WIDTH-1:0] character_buff [CHARACTER_COUNT-1:0];
 logic ready_to_send; // You're either ready to send or you're sending
 logic send_led_data;
 logic send_element_data;
-string hex_str;
 // - "LD: 0xFFFF" Coming from this design going to the peripheral
 // - "7S: 0xFFFF" Coming from this design going to the peripheral
 
@@ -65,7 +64,6 @@ always_ff @(posedge clk) begin
 
     end else if(ena) begin
         if(led_data_reg != led_data) begin
-            $display("LED Data Changed");
             send_led_data <= 1;
             led_data_reg <= led_data;
         end
@@ -84,14 +82,13 @@ always_ff @(posedge clk) begin
                 character_buff[5] <= 8'd120; // "x"
 
                 // Convert the binary value to hex and assign it to character_buff
-                character_buff[6] = bin_to_hex_str(led_data_reg[3:0]);
-                character_buff[7] = bin_to_hex_str(led_data_reg[7:4]);
-                character_buff[8] = bin_to_hex_str(led_data_reg[11:8]);
-                character_buff[9] = bin_to_hex_str(led_data_reg[15:12]);
+                character_buff[6] <= bin_to_hex_str(led_data_reg[3:0]);
+                character_buff[7] <= bin_to_hex_str(led_data_reg[7:4]);
+                character_buff[8] <= bin_to_hex_str(led_data_reg[11:8]);
+                character_buff[9] <= bin_to_hex_str(led_data_reg[15:12]);
                 
                 send_led_data <= 0;
                 ready_to_send <= 0;
-                $display("Loading Buffer with LED Data");
                 //$display("Character Buffer Set to: %c-%c-%c-%c-%c-%c-%c-%c-%c-%c", character_buff[0], character_buff[1], character_buff[2], character_buff[3], character_buff[4], character_buff[5], character_buff[6], character_buff[7], character_buff[8], character_buff[9]);
             end else if(send_element_data) begin
                 // Assign individual characters to the array for element data
@@ -103,10 +100,10 @@ always_ff @(posedge clk) begin
                 character_buff[5] <= 8'd120; // "x"
 
                 // Convert the binary value to hex and assign it to character_buff
-                character_buff[6] = bin_to_hex_str(element_data_reg[3:0]);
-                character_buff[7] = bin_to_hex_str(element_data_reg[7:4]);
-                character_buff[8] = bin_to_hex_str(element_data_reg[11:8]);
-                character_buff[9] = "0";
+                character_buff[6] <= bin_to_hex_str(element_data_reg[3:0]);
+                character_buff[7] <= bin_to_hex_str(element_data_reg[7:4]);
+                character_buff[8] <= bin_to_hex_str(element_data_reg[11:8]);
+                character_buff[9] <= "0";
 
                 send_element_data <= 0;
                 ready_to_send <= 0;
@@ -125,7 +122,6 @@ always_ff @(posedge clk) begin
 
                 // Check if every element in the buffer is 0
                 if(character_buff[0] == 0 && character_buff[1] == 0 && character_buff[2] == 0 && character_buff[3] == 0 && character_buff[4] == 0 && character_buff[5] == 0 && character_buff[6] == 0 && character_buff[7] == 0 && character_buff[8] == 0 && character_buff[9] == 0) begin
-                    $display("Buffer empty");
                     ready_to_send <= 1;
                     // When now sending make sure there is no ouput
                     output_data <= 0;
