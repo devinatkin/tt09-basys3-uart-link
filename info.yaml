@@ -56,10 +56,10 @@ pinout:
   uo[7]: ""
 
   # Bidirectional pins
-  uio[0]: "uart_tx"
-  uio[1]: "uart_rx"
-  uio[2]: "uart_tx_ready"
-  uio[3]: "uart_tx_valid"
+  uio[0]: "uart_tx"         # UART TX (output)
+  uio[1]: "uart_rx"         # UART RX (input)
+  uio[2]: "uart_tx_ready"   # UART TX ready (output, indicates that the UART TX is ready to accept data)
+  uio[3]: "uart_tx_valid"   # UART TX valid (input, indicates that the UART TX data input is valid)
   uio[4]: "uart_rx_valid"
   uio[5]: "uart_rx_ready"
   uio[6]: ""

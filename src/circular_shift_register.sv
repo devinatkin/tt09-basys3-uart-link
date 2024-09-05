@@ -4,7 +4,7 @@ module circular_shift_register #(
 ) (
     input logic clk,            // Clock input
     input logic rst_n,          // Active low reset input
-    output logic [WIDTH-1:0] reg_out [SIZE-1:0]  // Output array of registers
+    output logic [WIDTH*SIZE-1:0] reg_out // Output register array
 );
 
     logic [WIDTH-1:0] circ_reg [SIZE-1:0]; // Register array definition
@@ -30,22 +30,23 @@ module circular_shift_register #(
             circ_reg[13] <= 8'h00;
             circ_reg[14] <= 8'h00;
             circ_reg[15] <= 8'h00;
-            $display("Resetting the register array");
+
         end else begin
             // Circularly shift the register array
             for (int i = 0; i < SIZE-1; i++) begin
                 circ_reg[i+1] <= circ_reg[i];
-                $display("circ_reg[%0d] = %h", i+1, circ_reg[i+1]);
+
             end
             circ_reg[0] <= circ_reg[SIZE-1]; // Wrap around the last element
         end
     end
 
-    // Assign the register values to reg_out
-    always_comb begin
-        for (int i = 0; i < SIZE; i++) begin
-            reg_out[i] = circ_reg[i]; // Output the circular register values
-        end
-    end
+genvar i;
+        generate
+            for (i = 0; i < SIZE; i++) begin
+                assign reg_out[WIDTH*i +: WIDTH] = circ_reg[i];
+            end
+        endgenerate
+
     
 endmodule
