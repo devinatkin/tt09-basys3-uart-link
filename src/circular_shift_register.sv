@@ -11,7 +11,7 @@ module circular_shift_register #(
 
 
     // Always block triggered by a positive edge of the clock
-    always_ff @(posedge clk) begin
+    always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             // Reset the register array to the initial state
             circ_reg[0]  <= 8'h00;
