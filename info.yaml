@@ -24,6 +24,7 @@ project:
     - "uart_sr_input.sv"
     - "uart_tx_fifo.sv"
     - "input_value_check.sv"
+    - "output_value_generator.sv"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:

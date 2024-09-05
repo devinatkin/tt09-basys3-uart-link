@@ -23,6 +23,8 @@ module tt_um_devinatkin_basys3_uart (
     parameter CHARACTER_COUNT = 10;
     parameter SWITCH_COUNT = 16;
     parameter BUTTON_COUNT = 5;
+    parameter LED_COUNT = 16;
+    parameter ELEMENT_COUNT = 12;
 
     // Internal signals
     logic tx_signal, rx_signal;
@@ -31,6 +33,8 @@ module tt_um_devinatkin_basys3_uart (
     logic [(DATA_WIDTH * CHARACTER_COUNT)-1:0] sr_data;
     logic [SWITCH_COUNT-1:0] switch_data;
     logic [BUTTON_COUNT-1:0] button_data;
+    logic [LED_COUNT-1:0] led_data;
+    logic [ELEMENT_COUNT-1:0] element_data;
 
     // Assign IO directions
     assign uio_oe = 8'b00011101; // Define IO directions (1 = output)
@@ -43,10 +47,7 @@ module tt_um_devinatkin_basys3_uart (
     assign rx_signal = uio_in[1];
     assign rx_ready  = uio_in[5];
 
-    // Static assignments for TX data
-    assign tx_data_in_valid = 1'b1; // Always valid
-    assign tx_data_in = 8'b11001100; // Static TX data, can be updated
-
+ 
     // UART instance
     uart #(
         .DATA_WIDTH(DATA_WIDTH),
@@ -108,5 +109,22 @@ module tt_um_devinatkin_basys3_uart (
         .reset_n(rst_n),
         .ena(ena)
     );
+
+    // Output value generator
+    output_value_check #(
+    .DATA_WIDTH(DATA_WIDTH),
+    .CHARACTER_COUNT(CHARACTER_COUNT),
+    .LED_COUNT(LED_COUNT),
+    .ELEMENT_COUNT(ELEMENT_COUNT)
+  ) dut (
+    .led_data(led_data),
+    .element_data(element_data),
+    .tx_ready(tx_ready),
+    .output_data(tx_data_in),
+    .output_valid(tx_data_in_valid),
+    .clk(clk),
+    .reset_n(reset_n),
+    .ena(ena)
+  );
 
 endmodule
