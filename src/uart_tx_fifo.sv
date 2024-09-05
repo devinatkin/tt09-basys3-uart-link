@@ -25,6 +25,31 @@ module uart_tx_fifo #(parameter
 
     // DATA_WIDTH by CHARACTER_COUNT FiFo
     logic [DATA_WIDTH-1:0] fifo [CHARACTER_COUNT-1:0];
+
+    // fifo registers split out so they show up in gtkwave
+    logic [DATA_WIDTH-1:0] fifo_0;
+    logic [DATA_WIDTH-1:0] fifo_1;
+    logic [DATA_WIDTH-1:0] fifo_2;
+    logic [DATA_WIDTH-1:0] fifo_3;
+    logic [DATA_WIDTH-1:0] fifo_4;
+    logic [DATA_WIDTH-1:0] fifo_5;
+    logic [DATA_WIDTH-1:0] fifo_6;
+    logic [DATA_WIDTH-1:0] fifo_7;
+    logic [DATA_WIDTH-1:0] fifo_8;
+    logic [DATA_WIDTH-1:0] fifo_9;
+
+    // Assign the data to the registers
+    assign fifo_0 = fifo[0];
+    assign fifo_1 = fifo[1];
+    assign fifo_2 = fifo[2];
+    assign fifo_3 = fifo[3];
+    assign fifo_4 = fifo[4];
+    assign fifo_5 = fifo[5];
+    assign fifo_6 = fifo[6];
+    assign fifo_7 = fifo[7];
+    assign fifo_8 = fifo[8];
+    assign fifo_9 = fifo[9];
+
     logic [CHARACTER_COUNT-1:0] fifo_valid;
 
     always_ff @(posedge clk) begin
@@ -39,7 +64,7 @@ module uart_tx_fifo #(parameter
             if(tx_data_in_valid) begin
                 fifo[0] <= tx_data_in;
                 fifo_valid[0] <= 1;
-
+                $display("Loading Data into FIFO");
                 // Shift the FIFO data across to accomodate new data if the FIFO has any valid data
                 if(fifo_valid > 0) begin
                     for(int i = 1; i < CHARACTER_COUNT; i++) begin

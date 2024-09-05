@@ -35,6 +35,25 @@ module tb_output_value_check;
     .ena(ena)
   );
 
+  // Feed the DUT output into the output FIFO to verify the full output
+  logic [DATA_WIDTH-1:0] tx_data;
+  logic tx_valid;
+
+  uart_tx_fifo #(
+    .DATA_WIDTH(DATA_WIDTH),
+    .CHARACTER_COUNT(CHARACTER_COUNT)
+    ) uart_tx_fifo_inst
+    (
+    .tx_data(tx_data),
+    .tx_valid(tx_valid),
+    .tx_ready(1'b0), // Never ready for this testbench (FIFO will simply overflow)
+    .tx_data_in(output_data),
+    .tx_data_in_valid(output_valid),
+    .clk(clk),
+    .reset_n(reset_n),
+    .ena(ena));
+
+
   // Clock generation
   initial begin
     clk = 0;
@@ -45,43 +64,55 @@ module tb_output_value_check;
   initial begin
     // Initialize all inputs
     reset_n = 0;
-    ena = 0;
+    ena = 1;
     led_data = 16'h0000;
     element_data = 12'h000;
+    tx_ready = 1;
 
     // Apply reset
-    #20;
-    reset_n = 1;
+    #10 reset_n = 1;
 
-    // Enable the module
-    ena = 1;
+    // Wait for a few clock cycles
+    #10;
 
-    // Stimulus 1: Set led_data
-    #200;
-    led_data = 16'hABCD;
+    // Change the led_data
+    led_data = 16'hF0FF;
+    #10;
+    // Wait for output valid to drop
+    wait(!output_valid);
 
-    // Stimulus 2: Set element_data
-    #500;
-    element_data = 12'hFFF;
+    // Change the led_data
 
-    // Wait and observe the output
-    #100;
+    led_data = 16'hAFCD;
+    // Wait for output valid to cycke
+    wait(output_valid);
+    wait(!output_valid);
 
-    // Stimulus 3: Change both led_data and element_data
-    led_data = 16'h1234;
-    element_data = 12'hAAA;
+    // Change the element_data
+    element_data = 12'h123;
+    // Wait for output valid to cycle
+    wait(output_valid);
+    wait(!output_valid);
 
-    // Wait and observe
-    #100;
+    led_data = 16'hAACD;
+    // Wait for output valid to cycke
+    wait(output_valid);
+    wait(!output_valid);
 
-    // Finish the simulation
-    $stop;
+    #500 $finish;
   end
 
-  // Monitor outputs
+  // Monitor the output
   initial begin
-    $monitor("Time = %0t, led_data = %h, element_data = %h, output_data = %h, output_valid = %b", 
-              $time, led_data, element_data, output_data, output_valid);
+    $monitor("led_data = %h, element_data = %h, tx_ready = %b, output_data = %h, output_valid = %b", led_data, element_data, tx_ready, output_data, output_valid);
+  end
+
+
+  // Dump waveform
+  initial begin
+      $dumpfile("output.vcd");
+      $dumpvars(0, tb_output_value_check);
+      $dumpvars(0, uart_tx_fifo_inst);
   end
 
 endmodule
