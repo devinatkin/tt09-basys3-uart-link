@@ -25,6 +25,11 @@ project:
     - "uart_tx_fifo.sv"
     - "input_value_check.sv"
     - "output_value_generator.sv"
+    - "bcd_binary.sv"
+    - "display_driver.sv"
+    - "pwm_module.sv"
+    - "segment_mux.sv"
+    - "sevenseg4ddriver.sv"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:

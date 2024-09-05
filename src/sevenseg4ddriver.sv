@@ -1,4 +1,3 @@
-`timescale 1ns / 1ns
 
 module sevenseg4ddriver(
     input logic clk, //100Mhz System Clock

@@ -1,4 +1,3 @@
-`timescale 1ns / 1ps
 
 module segment_mux (
     input logic clk,            // Clock signal

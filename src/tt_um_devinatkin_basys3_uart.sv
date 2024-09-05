@@ -39,8 +39,7 @@ module tt_um_devinatkin_basys3_uart (
     assign uo_out = switch_data[7:0];
     assign led_data[7:0] = switch_data[7:0];
     assign led_data[15:8] = switch_data[7:0];
-    assign element_data[7:0] = switch_data[7:0];
-    assign element_data[11:8] = switch_data[3:0];
+    assign element_data[11] = switch_data[7];
     // Assign IO directions
     assign uio_oe = 8'b00011101; // Define IO directions (1 = output)
 
@@ -130,5 +129,16 @@ module tt_um_devinatkin_basys3_uart (
     .reset_n(rst_n),
     .ena(ena)
   );
+
+display_driver SegmentDisplay (
+    .clk(clk),             // 50MHz System Clock
+    .rst_n(rst_n),           // Active Low Reset
+    .bcd0(switch_data[3:0]),      // BCD input for the first digit (seconds LSB)
+    .bcd1(switch_data[7:4]),      // BCD input for the second digit (seconds MSB)
+    .bcd2(switch_data[11:8]),      // BCD input for the third digit (minutes LSB)
+    .bcd3(switch_data[15:12]),      // BCD input for the fourth digit (minutes MSB)
+    .seg(element_data[6:0]),      // Segment Outputs
+    .an(element_data[10:7])        // Common Anode Outputs (0 = on, 1 = off)
+);
 
 endmodule
