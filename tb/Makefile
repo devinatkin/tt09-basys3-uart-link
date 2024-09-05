@@ -11,7 +11,7 @@ OUT_DIR = sim_out
 $(shell mkdir -p $(OUT_DIR))
 
 # All source files (excluding testbenches)
-SOURCES = ../src/tt_um_devinatkin_basys3_uart.sv ../src/uart.sv ../src/uart_tx.sv ../src/uart_rx.sv ../src/uart_sr_input.sv ../src/uart_tx_fifo.sv ../src/input_value_check.sv
+SOURCES = ../src/tt_um_devinatkin_basys3_uart.sv ../src/uart.sv ../src/uart_tx.sv ../src/uart_rx.sv ../src/uart_sr_input.sv ../src/uart_tx_fifo.sv ../src/input_value_check.sv ../src/output_value_generator.sv
 
 # Phony targets
 .PHONY: all clean
@@ -32,6 +32,10 @@ tb_uart_fifo:
 
 tb_input_value_check:
 	$(IVL) -o $(OUT_DIR)/$@.vvp $(SOURCES) tb_input_value_check.sv
+	$(VVP) $(OUT_DIR)/$@.vvp
+
+tb_output_value_check:
+	$(IVL) -o $(OUT_DIR)/$@.vvp $(SOURCES) tb_output_value_generator.sv
 	$(VVP) $(OUT_DIR)/$@.vvp
 
 clean:
