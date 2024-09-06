@@ -66,7 +66,7 @@ module tb_led_cycle;
 
     // Monitor LED output and display changes
     initial begin
-        $monitor("Time: %0t | Reset: %b | Buttons: %b | LEDs: %b", $time, reset, buttons, led);
+        $monitor("Time: %0t | Reset: %b | Buttons: %b | LEDs: %b", $time, rst_n, buttons, led);
     end
 
 endmodule

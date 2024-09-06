@@ -20,6 +20,7 @@ jobs:
           - tb_uart_fifo
           - tb_input_value_check
           - tb_output_value_check
+          - tb_led_cycle
 
     steps:
     - name: Checkout repository

@@ -61,6 +61,10 @@ tb_circular_shift_register:
 	$(IVL) -o $(OUT_DIR)/$@.vvp $(SOURCES) tb_circular_shift_register.sv
 	$(VVP) $(OUT_DIR)/$@.vvp
 
+tb_led_cycle:
+	$(IVL) -o $(OUT_DIR)/$@.vvp $(SOURCES) tb_led_cycle.sv
+	$(VVP) $(OUT_DIR)/$@.vvp
+
 clean:
 	@echo Cleaning up...
 	rm -rf $(OUT_DIR)
