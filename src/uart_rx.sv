@@ -9,7 +9,8 @@ module uart_rx #(parameter
     LB_DATA_WIDTH    = $clog2(DATA_WIDTH),
     PULSE_WIDTH      = CLK_FREQ / BAUD_RATE,
     LB_PULSE_WIDTH   = $clog2(PULSE_WIDTH),
-    HALF_PULSE_WIDTH = PULSE_WIDTH / 2)
+    HALF_PULSE_WIDTH = PULSE_WIDTH / 2,
+    PULSE_AND_HALF   = PULSE_WIDTH + HALF_PULSE_WIDTH)
     (
     input logic rx_signal,
     output logic [DATA_WIDTH-1:0] rx_data,
@@ -92,7 +93,7 @@ module uart_rx #(parameter
                 // next state: when start bit is detected, go to the STT_DATA state
                 STT_WAIT: begin
                     if(SIGNAL_R == 0) begin
-                        CLK_CNT <= PULSE_WIDTH + HALF_PULSE_WIDTH;
+                        CLK_CNT <= PULSE_AND_HALF[LB_PULSE_WIDTH:0];
                         DATA_CNT <= 0;
                         state <= STT_DATA;
                     end

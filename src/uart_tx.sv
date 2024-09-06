@@ -9,7 +9,8 @@ module uart_tx #(parameter
     LB_DATA_WIDTH    = $clog2(DATA_WIDTH),
     PULSE_WIDTH      = CLK_FREQ / BAUD_RATE,
     LB_PULSE_WIDTH   = $clog2(PULSE_WIDTH),
-    HALF_PULSE_WIDTH = PULSE_WIDTH / 2)
+    HALF_PULSE_WIDTH = PULSE_WIDTH / 2,
+    PULSE_AND_HALF   = PULSE_WIDTH + HALF_PULSE_WIDTH)
     (
     output logic tx_signal,
     input logic [DATA_WIDTH-1:0] tx_data,
@@ -32,6 +33,7 @@ module uart_tx #(parameter
     logic [LB_DATA_WIDTH-1:0] DATA_CNT;
     logic [LB_PULSE_WIDTH:0] CLK_CNT;
 
+    
     always_ff @(posedge clk) begin
         if(!reset_n) begin
             state <= STT_WAIT;
@@ -91,7 +93,7 @@ module uart_tx #(parameter
                     end
                     else begin
                         SIGNAL_REG <= 1;                           // Assert the stop bit
-                        CLK_CNT <= (PULSE_WIDTH + HALF_PULSE_WIDTH); // Load the clock counter with the pulse width
+                        CLK_CNT <= PULSE_AND_HALF[LB_PULSE_WIDTH:0]; // Load the clock counter with the pulse width
                         state <= STT_WAIT;                         // Go to the STT_WAIT state
                     end
                 end

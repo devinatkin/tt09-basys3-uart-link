@@ -25,7 +25,7 @@ endfunction
 
 
     // DATA_WIDTH by CHARACTER_COUNT FiFo
-    logic [$clog2(CHARACTER_COUNT)-1:0] fifo [CHARACTER_COUNT-1:0];
+    logic [DATA_WIDTH-1:0] fifo [CHARACTER_COUNT-1:0];
 
     // Declare a temporary variable to hold the result of highest1Bit
     logic [3:0] highest_idx;

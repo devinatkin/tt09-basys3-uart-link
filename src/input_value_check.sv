@@ -64,15 +64,17 @@ endfunction
 function automatic logic [3:0] hex_char_to_nibble(
     input logic [7:0] hex_char
 );
+    logic [7:0] nibble_byte;
     begin
         if (hex_char >= "0" && hex_char <= "9")
-            hex_char_to_nibble = (hex_char - "0") & 4'hF;
+            nibble_byte = (hex_char - "0");
         else if (hex_char >= "A" && hex_char <= "F")
-            hex_char_to_nibble = hex_char - "A" + 4'd10;
+            nibble_byte = hex_char - "A" + 8'd10;
         else if (hex_char >= "a" && hex_char <= "f")
-            hex_char_to_nibble = hex_char - "a" + 4'd10;
+            nibble_byte = hex_char - "a" + 8'd10;
         else
-            hex_char_to_nibble = 4'b0000;
+            nibble_byte = 8'b00000000;
+        hex_char_to_nibble = nibble_byte[3:0];
     end
 endfunction
 

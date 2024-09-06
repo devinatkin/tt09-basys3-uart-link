@@ -146,4 +146,9 @@ display_driver SegmentDisplay (
         .led(led_data)
     );
 
+logic unused_bits;
+assign unused_bits = uio_in[7]| uio_in[6]| uio_in[5] | uio_in[3] | uio_in[2] | uio_in[0];  // Mark unused bits
+logic [7:0] unused_bits2;
+assign unused_bits2 = ui_in;  // Mark unused bits
+
 endmodule
