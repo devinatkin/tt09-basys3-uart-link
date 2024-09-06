@@ -12,22 +12,23 @@ module uart_tx_fifo #(parameter
     input logic ena);
 
     // Function to find the highest bit set in 'val'
-    function integer highest1Bit(input [CHARACTER_COUNT-1:0] val);
-        integer i;
-        highest1Bit = 0; 
-        for (i = CHARACTER_COUNT-1; i >= 0; i--) begin
-            if (val[i] == 1) begin
-                highest1Bit = i;
-                i = -1;
-            end
+function logic [$clog2(CHARACTER_COUNT)-1:0] highest1Bit(input [CHARACTER_COUNT-1:0] val);
+    integer i;
+    highest1Bit = '0;  // Initialize to 0 (or possibly to a better default, e.g., -1 if no 1 found)
+    for (i = CHARACTER_COUNT-1; i >= 0; i--) begin
+        if (val[i] == 1) begin
+            highest1Bit = i[$clog2(CHARACTER_COUNT)-1:0]; // Use the necessary width
+            i = 0;  // Exit the loop
         end
-    endfunction
+    end
+endfunction
+
 
     // DATA_WIDTH by CHARACTER_COUNT FiFo
-    logic [DATA_WIDTH-1:0] fifo [CHARACTER_COUNT-1:0];
+    logic [$clog2(CHARACTER_COUNT)-1:0] fifo [CHARACTER_COUNT-1:0];
 
     // Declare a temporary variable to hold the result of highest1Bit
-    integer highest_idx;
+    logic [3:0] highest_idx;
 
     // // fifo registers split out so they show up in gtkwave
     // logic [DATA_WIDTH-1:0] fifo_0;

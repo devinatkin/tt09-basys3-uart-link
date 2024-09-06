@@ -66,7 +66,7 @@ function automatic logic [3:0] hex_char_to_nibble(
 );
     begin
         if (hex_char >= "0" && hex_char <= "9")
-            hex_char_to_nibble = hex_char - "0";
+            hex_char_to_nibble = (hex_char - "0") & 4'hF;
         else if (hex_char >= "A" && hex_char <= "F")
             hex_char_to_nibble = hex_char - "A" + 4'd10;
         else if (hex_char >= "a" && hex_char <= "f")
