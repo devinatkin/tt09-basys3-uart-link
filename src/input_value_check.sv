@@ -17,6 +17,8 @@ logic [BUTTON_COUNT-1:0] button_data_reg;
 
 logic [DATA_WIDTH-1:0] character_buff [CHARACTER_COUNT-1:0];
 
+logic [15:0] string_value;
+
 // Define the constant patterns for "BUT: 0x&&&" and "SW: 0x&&&&"
 // & is a wildcard character
 localparam logic [DATA_WIDTH*CHARACTER_COUNT-1:0] BUT_PATTERN = {"B", "T", ":", " ", "0", "x", "&" , "&", "&", "&"};
@@ -104,18 +106,19 @@ always_ff @(posedge clk) begin
         if(match_pattern(BUT_PATTERN)) begin
             // "BUT: 0x&&&" pattern matched
             // $display("Matched BUT_PATTERN");
-            button_data_reg <= hex_string_to_value(
-                character_buff[3], character_buff[2], 
-                character_buff[1], character_buff[0]
-            );
+            button_data_reg <= string_value[BUTTON_COUNT-1:0];
         end else if(match_pattern(SW_PATTERN)) begin
             // "SW: 0x&&&&" pattern matched
-            switch_data_reg <= hex_string_to_value(
-                character_buff[3], character_buff[2], 
-                character_buff[1], character_buff[0]
-            );
+            switch_data_reg <= string_value;
         end
     end
+end
+
+always_comb begin
+    string_value = hex_string_to_value(
+        character_buff[3], character_buff[2], 
+        character_buff[1], character_buff[0]
+    );
 end
 
 assign switch_data = switch_data_reg;
