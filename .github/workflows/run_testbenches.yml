@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        testbench: [tb_pwm, tb_circular_shift_register]  # Add your testbench names here
+        testbench: [tb_pwm, tb_circular_shift_register, tb_uart]  # Add your testbench names here
 
     steps:
     - name: Checkout repository
