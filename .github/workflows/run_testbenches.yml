@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      matrix:
+        testbench: [tb_pwm, tb_circular_shift_register]  # Add your testbench names here
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -23,10 +26,10 @@ jobs:
       run: |
         sudo apt-get install -y iverilog
 
-    - name: Run testbenches
+    - name: Run testbench
       run: |
         cd tb
-        make all &
+        make ${{ matrix.testbench }} &
         wait
 
     - name: Cleanup

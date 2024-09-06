@@ -10,6 +10,8 @@ module tb_circular_shift_register;
 
     // Output array for observing the register state
     logic [(WIDTH * SIZE)-1:0] reg_out_flat;
+
+    logic [(WIDTH * SIZE)-1:0] reg_out_prev;
     // Instantiate the circular shift register
     circular_shift_register #(
         .WIDTH(WIDTH),
@@ -34,11 +36,20 @@ module tb_circular_shift_register;
         // Apply reset and hold it for a few clock cycles
         #20 rst_n = 1; // Release reset after 10 time units
 
+        reg_out_prev = reg_out_flat;
+
         // Loop through 16 cycles and print the register state after each cycle
         repeat (SIZE) begin
             @(posedge clk); // Wait for the positive edge of the clock
             
             $display("Register state after cycle: %h", reg_out_flat);
+
+            // Check if the register has shifted correctly
+            if (reg_out_flat === reg_out_prev) begin
+                $error("Register has not shifted");
+            end
+
+            reg_out_prev = reg_out_flat;
         end
 
         // Finish the simulation
