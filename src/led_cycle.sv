@@ -5,8 +5,8 @@ module led_cycle (
     output logic [15:0] led       // 16 LEDs
 );
 
-    localparam bit_width = 7;    // Set the bit width to 8 for PWM instances
-    logic [6:0] duty [15:0];     // Duty cycles for each PWM module
+    localparam bit_width = 6;    // Set the bit width to 8 for PWM instances
+    logic [5:0] duty [15:0];     // Duty cycles for each PWM module
     logic [15:0] pwm_out;        // PWM outputs
     logic [127:0] reg_out;  // Output of the circular shift register
     logic clk_reduced;           // Reduced clock signal for the circular shift register
@@ -63,7 +63,7 @@ module led_cycle (
     genvar j;
     generate
         for (j = 0; j < 16; j++) begin
-            assign duty[j] = reg_out[7*j +: 7];
+            assign duty[j] = reg_out[6*j +: 6];
         end
     endgenerate
     assign led = pwm_out;        // Drive LEDs with each bit of the PWM outputs
