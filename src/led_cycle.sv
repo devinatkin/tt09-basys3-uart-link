@@ -34,7 +34,7 @@ module led_cycle (
                 .clk(clk),
                 .rst_n(rst_n),
                 .duty(duty[i]),
-                .max_value(7'd127),
+                .max_value(6'd63),
                 .pwm_out(pwm_out[i])
             );
         end
@@ -63,7 +63,7 @@ module led_cycle (
     genvar j;
     generate
         for (j = 0; j < 16; j++) begin
-            assign duty[j] = reg_out[6*j +: 6];
+            assign duty[j] = reg_out[5*j +: 5];
         end
     endgenerate
     assign led = pwm_out;        // Drive LEDs with each bit of the PWM outputs
