@@ -8,7 +8,7 @@ module circular_shift_register #(
 );
 
     logic [WIDTH-1:0] circ_reg [SIZE-1:0]; // Register array definition
-
+    logic [$clog2(SIZE)-1:0] read_ptr; // Pointer for circular read
 
     // Always block triggered by a positive edge of the clock
     always_ff @(posedge clk or negedge rst_n) begin
@@ -30,23 +30,18 @@ module circular_shift_register #(
             circ_reg[13] <= 8'h00;
             circ_reg[14] <= 8'h00;
             circ_reg[15] <= 8'h00;
-
+            read_ptr <= 0; // Reset the read pointer
         end else begin
-            // Circularly shift the register array
-            for (int i = 0; i < SIZE-1; i++) begin
-                circ_reg[i+1] <= circ_reg[i];
-
-            end
-            circ_reg[0] <= circ_reg[SIZE-1]; // Wrap around the last element
+            read_ptr <= read_ptr + 1; // Update the pointer each clock cycle
         end
     end
 
-genvar i;
-        generate
-            for (i = 0; i < SIZE; i++) begin
-                assign reg_out[WIDTH*i +: WIDTH] = circ_reg[i];
-            end
-        endgenerate
+    // Generate logic for output based on pointer
+    genvar i;
+    generate
+        for (i = 0; i < SIZE; i++) begin
+            assign reg_out[WIDTH*i +: WIDTH] = circ_reg[(read_ptr + i) % SIZE];
+        end
+    endgenerate
 
-    
 endmodule
