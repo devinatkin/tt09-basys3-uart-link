@@ -6,9 +6,10 @@ module led_cycle (
 );
 
     localparam bit_width = 6;    // Set the bit width to 8 for PWM instances
-    logic [5:0] duty [15:0];     // Duty cycles for each PWM module
-    logic [15:0] pwm_out;        // PWM outputs
-    logic [127:0] reg_out;  // Output of the circular shift register
+    localparam led_count = 16;
+    logic [bit_width-1:0] duty [led_count-1:0];     // Duty cycles for each PWM module
+    logic [led_count-1:0] pwm_out;        // PWM outputs
+    logic [bit_width*led_count-1:0] reg_out;  // Output of the circular shift register
     logic clk_reduced;           // Reduced clock signal for the circular shift register
     logic [31:0] max_value;      // Maximum value for the clock reduction (speed control)
 
@@ -41,7 +42,10 @@ module led_cycle (
     endgenerate
 
     // Instantiate the circular shift register
-    circular_shift_register csr (
+    circular_shift_register #(
+        .WIDTH(bit_width), // Width of each register
+        .SIZE(led_count)  // Number of registers
+        ) csr (
         .clk(clk_reduced),
         .rst_n(rst_n),
         .reg_out(reg_out)
