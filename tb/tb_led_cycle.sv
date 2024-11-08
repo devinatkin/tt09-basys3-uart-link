@@ -42,23 +42,23 @@ module tb_led_cycle;
 
         // Test different button states to adjust speed
         buttons = 5'b00001;  // Slowest speed
-        #1000;
+        #1000000;
 
         buttons = 5'b00010;  // Increase speed
-        #1000;
+        #1000000;
 
         buttons = 5'b00100;  // Increase speed further
-        #1000;
+        #1000000;
 
         buttons = 5'b01000;  // Faster speed
-        #1000;
+        #1000000;
 
         buttons = 5'b10000;  // Fastest speed
-        #1000;
+        #1000000;
 
         // Disable all buttons, expect default slowest speed
         buttons = 5'b00000;
-        #1000;
+        #1000000;
 
         // End simulation
         $finish;

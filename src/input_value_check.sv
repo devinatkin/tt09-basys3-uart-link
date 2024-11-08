@@ -37,24 +37,6 @@ function automatic logic match_pattern(
             // If pattern contains wildcard '&', it's always a match at that position
             if(pattern[i*DATA_WIDTH +: DATA_WIDTH] != "&" &&
                pattern[i*DATA_WIDTH +: DATA_WIDTH] != character_buff[i]) begin
-                // if (pattern == BUT_PATTERN) begin
-                // $display("C: %c%c%c%c%c%c%c%c%c%c", 
-                //     character_buff[0], character_buff[1], character_buff[2], character_buff[3], character_buff[4],
-                //     character_buff[5], character_buff[6], character_buff[7], character_buff[8], character_buff[9]);
-                // // $display("P: %c%c%c%c%c%c%c%c%c%c", 
-                // //     pattern[0*DATA_WIDTH +: DATA_WIDTH], 
-                // //     pattern[1*DATA_WIDTH +: DATA_WIDTH], 
-                // //     pattern[2*DATA_WIDTH +: DATA_WIDTH], 
-                // //     pattern[3*DATA_WIDTH +: DATA_WIDTH], 
-                // //     pattern[4*DATA_WIDTH +: DATA_WIDTH], 
-                // //     pattern[5*DATA_WIDTH +: DATA_WIDTH], 
-                // //     pattern[6*DATA_WIDTH +: DATA_WIDTH], 
-                // //     pattern[7*DATA_WIDTH +: DATA_WIDTH], 
-                // //     pattern[8*DATA_WIDTH +: DATA_WIDTH], 
-                // //     pattern[9*DATA_WIDTH +: DATA_WIDTH]
-                // //     );
-                // $display("Mismatch between Character %0d: %c and Pattern %c", i, character_buff[i], pattern[i*DATA_WIDTH +: DATA_WIDTH]);
-                // end
                 is_match = 1'b0;  // If any character mismatches, set is_match to 0
             end
         end
