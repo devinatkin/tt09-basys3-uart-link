@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module basys3_top (
+module design1 (
     input  wire       clk,          // 100 MHz Basys 3 Clock
     input  wire       rst_n,        // Reset (active low)
     input  wire [15:0] sw,          // Basys 3 Switches
