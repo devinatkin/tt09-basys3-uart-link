@@ -25,12 +25,12 @@ module sevenseg4ddriver(
     );
 
     pwm_module #(
-        .bit_width(13) // Wide bit width setup
+        .bit_width(12) // Wide bit width setup
     ) clk_reducer (
         .clk(clk),
         .rst_n(rst_n),
-        .duty(4096), 
-        .max_value(8192),
+        .duty(12'd1250), 
+        .max_value(12'd2500),
         .pwm_out(clk_reduced)
     );
 
