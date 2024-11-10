@@ -7,9 +7,9 @@
 
 module design1 (
     input  wire       clk,          // 100 MHz Basys 3 Clock
-    input  wire       rst_n,        // Reset (active low)
+    input  wire       rst,        // Reset (active low)
     input  wire [15:0] sw,          // Basys 3 Switches
-    input  wire [4:0]  btn,         // Basys 3 Buttons
+    input  wire [3:0]  btn,         // Basys 3 Buttons
     output wire [15:0] led,         // Basys 3 LEDs
     output wire [6:0]  seg,         // 7-segment display segments (A-G)
     output wire [3:0]  an           // 7-segment display anodes
@@ -35,7 +35,7 @@ module design1 (
     // Display driver instantiation for Basys 3 7-segment display
     display_driver SegmentDisplay (
         .clk(clk),                   // 100 MHz System Clock
-        .rst_n(rst_n),               // Active Low Reset
+        .rst_n(!rst),               // Active Low Reset
         .bcd0(switch_data[3:0]),     // BCD input for the first digit (seconds LSB)
         .bcd1(switch_data[7:4]),     // BCD input for the second digit (seconds MSB)
         .bcd2(switch_data[11:8]),    // BCD input for the third digit (minutes LSB)
@@ -47,7 +47,7 @@ module design1 (
     // LED Cycle instantiation to control Basys 3 LEDs
     led_cycle Led_Cycle_inst (
         .clk(clk),
-        .rst_n(rst_n),
+        .rst_n(!rst),
         .buttons(button_data),
         .led(led_data)
     );

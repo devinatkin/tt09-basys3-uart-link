@@ -12,3 +12,5 @@ test/results.xml
 test/gate_level_netlist.v
 
 tb/sim_out/
+
+src/build/

@@ -105,18 +105,12 @@ set_property IOSTANDARD LVCMOS33 [get_ports {an[3]}]
 set_property PACKAGE_PIN U18 [get_ports rst]
 set_property IOSTANDARD LVCMOS33 [get_ports rst]
 
-# Start Button - Up Button
-set_property PACKAGE_PIN T18 [get_ports start_btn]
-set_property IOSTANDARD LVCMOS33 [get_ports start_btn]
+set_property PACKAGE_PIN T18 [get_ports {btn[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {btn[0]}]
+set_property PACKAGE_PIN W19 [get_ports {btn[1]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {btn[1]}]
+set_property PACKAGE_PIN T17 [get_ports {btn[2]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {btn[2]}]
+set_property PACKAGE_PIN U17 [get_ports {btn[3]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {btn[3]}]
 
-# Stop Button - Left Button
-set_property PACKAGE_PIN W19 [get_ports stop_btn]
-set_property IOSTANDARD LVCMOS33 [get_ports stop_btn]
-
-# Increment Second Button - Right Button
-set_property PACKAGE_PIN T17 [get_ports inc_sec_btn]
-set_property IOSTANDARD LVCMOS33 [get_ports inc_sec_btn]
-
-# Increment Minute Button - Down Button
-set_property PACKAGE_PIN U17 [get_ports inc_min_btn]
-set_property IOSTANDARD LVCMOS33 [get_ports inc_min_btn]
